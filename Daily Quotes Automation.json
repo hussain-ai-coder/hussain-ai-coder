@@ -1,0 +1,131 @@
+{
+  "name": "Daily Quotes Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "7909e3b0-934b-463e-8345-4a8f34cf65db",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Generate one original, short quote.\n\nRules:\n- Maximum 20 words\n- Inspirational and practical\n- Clear, simple language\n- No emojis\n- No hashtags\n- Do not mention that you are an AI\n\nReturn only the quote text.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "1b26a3f3-8146-498a-ad30-716d6efc420b",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "48945360-d925-4cce-9511-49cffae59b44",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "zXRYFIWuVfhGJGaY",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "pakistani17581@gmail.com",
+        "subject": "Quote of the day",
+        "emailType": "text",
+        "message": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "ea3f4ee7-1f32-46d0-8726-208e72a4bf5e",
+      "name": "Send a message",
+      "webhookId": "73b17ccb-005f-411c-b0ec-7588b6bd0257",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "pYW3btxU65ty8XcI",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c50491c3-cdb4-4656-95b7-f6e3dfb1a5b0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "42015ef60d7aaad79af06e5fa2fc54f6dd9274557a5ae43a4648709d76936c4c"
+  },
+  "id": "aUyz2uHyOtd6QpGgxkJ8Y",
+  "tags": []
+}
